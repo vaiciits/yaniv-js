@@ -2,6 +2,7 @@ const MAX_HAND_SIZE = 5;
 const MAX_PLAYER_COUNT = 4;
 const DISPLAY_NONE = 'none';
 const DISPLAY_FLEX = 'flex';
+const CARD_SELECTED = 'selected';
 
 class Deck {
     cards = [];
@@ -236,7 +237,7 @@ class Player {
             return [];
         }
 
-        if (!this.selectedValid()) {
+        if (!this.selectedIsValid()) {
             // TODO proper notification
             alert('Selected cards are not valid.');
             return [];
@@ -256,6 +257,63 @@ class Player {
         return selected;
     }
 
+    select(cardIndex) {
+        if (cardIndex >= this.hand.length) {
+            throw new Error(`Trying to select unavailable card: ${cardIndex} for player ${this.id}.`);
+        }
+        const card = this.hand[cardIndex];
+        const selectedIndex = this.selected.indexOf(card);
+        if (selectedIndex >= 0) {
+            this.selected.splice(selectedIndex, 1);
+        } else {
+            this.selected.push(card);
+        }
+    }
+
+    selectedInOrder() {
+        const values = this.selected.map(card => card.getNumeric());
+        values.sort();
+        return values.every((value, index, array) =>
+            index === 0 || value - 1 === array[index - 1]
+        );
+    }
+
+    selectedIsValid() {
+        return (this.selected.length > 0) && (
+            (this.selected.length === 1)
+            || this.selectedSameValue()
+            || this.selectedStraight()
+        );
+    }
+
+    selectedSameSuite() {
+        const suite = this.selected[0].getSuite();
+        // Skip the very first as comparing against it.
+        for (let i = 1; i < this.selected.length; i++) {
+            if (this.selected[i].getSuite() !== suite) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    selectedSameValue() {
+        const value = this.selected[0].getNumeric();
+        // Skip the very first as comparing against it.
+        for (let i = 1; i < this.selected.length; i++) {
+            if (this.selected[i].getNumeric() !== value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    selectedStraight() {
+        return this.selectedSameSuite() && this.selectedInOrder();
+    }
+
     updateHand() {
         const hand = document.querySelectorAll(`#player-${this.id} .hand .card`);
         const handSize = this.hand.length;
@@ -264,8 +322,6 @@ class Player {
             hand[i].style.display = i < handSize ? DISPLAY_FLEX : DISPLAY_NONE;
             if (i < handSize) {
                 hand[i].style.display = DISPLAY_FLEX;
-                // this.cardRepresentation(hand[i], this.hand[i].represent());
-                // hand[i].innerHTML = this.hand[i].represent();
                 hand[i].innerHTML = this.cardRepresentation(this.hand[i].represent());
             } else {
                 hand[i].style.display = DISPLAY_NONE;
@@ -284,12 +340,14 @@ class Bot extends Player {
 }
 
 class Yaniv {
-    constructor(deck, players) {
+    constructor(deck, players, turn = 0) {
         this.deck = deck;
         if (players.length > MAX_PLAYER_COUNT) {
             throw new Error('Too many players.');
         }
         this.players = players;
+        this.turn = turn; // Who's turn
+        this.played = []; // Array of arrays
     }
 
     deal() {
@@ -298,6 +356,50 @@ class Yaniv {
                 player.addCard(this.deck.take());
             });
         };
+    }
+
+    getCardDivs() {
+        return document.querySelectorAll('#player-1 .hand .card');
+    }
+
+    getPlayer(index) {
+        if (index >= this.players.length) {
+            throw new Error(`Trying to access unavailable player: ${index}.`);
+        }
+        return this.players[index];
+    }
+
+    select(cardIndex) {
+        this.getPlayer(0).select(cardIndex);
+        this.visualiseSelect(cardIndex);
+    }
+
+    takeFromDeck(playerIndex) {
+        const player = this.getPlayer(playerIndex);
+        const playedCards = player.playCards();
+        if (playedCards.length > 0) {
+            player.addCard(this.deck.take());
+            this.unselect();
+        }
+    }
+
+    unselect() {
+        const cardDivs = this.getCardDivs();
+        cardDivs.forEach(card => {
+            if (card.classList.contains(CARD_SELECTED)) {
+                card.classList.remove(CARD_SELECTED);
+            }
+        });
+    }
+
+    visualiseSelect(cardIndex) {
+        const cardDivs = this.getCardDivs();
+        const cardDiv = cardDivs[cardIndex];
+        if (cardDiv.classList.contains(CARD_SELECTED)) {
+            cardDiv.classList.remove(CARD_SELECTED);
+        } else {
+            cardDiv.classList.add(CARD_SELECTED);
+        }
     }
 }
 
@@ -318,11 +420,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     game.deal();
 });
-
-function takeFromDeck() {
-    const player = game.players[0];
-    const playedCards = player.playCards();
-    if (playedCards.length > 0) {
-        game.players[0].addCard(game.deck.take());
-    }
-};

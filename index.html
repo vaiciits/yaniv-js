@@ -9,7 +9,7 @@
   <body>
     <div class="game-container">
       <div class="table">
-        <div class="card" id="deck" onclick="takeFromDeck()"></div>
+        <div class="card" id="deck" onclick="game.takeFromDeck(0)"></div>
         <div class="played-cards"></div>
       </div>
 
@@ -21,11 +21,11 @@
           <span class="player-score">Score: 0</span>
         </div>
         <div class="hand">
-          <div class="card"></div>
-          <div class="card"></div>
-          <div class="card"></div>
-          <div class="card"></div>
-          <div class="card"></div>
+          <div class="card" onclick="game.select(0)"></div>
+          <div class="card" onclick="game.select(1)"></div>
+          <div class="card" onclick="game.select(2)"></div>
+          <div class="card" onclick="game.select(3)"></div>
+          <div class="card" onclick="game.select(4)"></div>
         </div>
       </div>
 
