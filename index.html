@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yaniv - the game</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="table">
+        <div class="card" id="deck" onclick="takeFromDeck()"></div>
+        <div class="played-cards"></div>
+      </div>
+
+      <!-- Players -->
+      <div class="player bottom-player" id="player-1">
+        <div class="player-info">
+          <span class="player-name">Player 1</span>
+          <!-- <img src="player1.jpg" alt="Player 1" class="player-picture" /> -->
+          <span class="player-score">Score: 0</span>
+        </div>
+        <div class="hand">
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
+      </div>
+
+      <div class="player left-player" id="player-2">
+        <div class="player-info">
+          <span class="player-name">Player 2</span>
+          <!-- <img src="player4.jpg" alt="Player 4" class="player-picture" /> -->
+          <span class="player-score">Score: 0</span>
+        </div>
+        <div class="hand">
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
+      </div>
+
+      <div class="player top-player" id="player-3">
+        <div class="player-info">
+          <span class="player-name">Player 3</span>
+          <!-- <img src="player3.jpg" alt="Player 3" class="player-picture" /> -->
+          <span class="player-score">Score: 0</span>
+        </div>
+        <div class="hand">
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
+      </div>
+
+      <div class="player right-player" id="player-4">
+        <div class="player-info">
+          <span class="player-name">Player 4</span>
+          <!-- <img src="player2.jpg" alt="Player 2" class="player-picture" /> -->
+          <span class="player-score">Score: 0</span>
+        </div>
+        <div class="hand">
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>

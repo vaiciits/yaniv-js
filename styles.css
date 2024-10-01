@@ -1,0 +1,136 @@
+body {
+    margin: 0;
+    /* height: 100%; */
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* TODO update min height */
+    min-height: 300px;
+    background-color: burlywood;
+}
+
+.table {
+    position: relative;
+    width: 40rem;
+    /* height: 300px; */
+    aspect-ratio: 1.4;
+    background-color: #008000;
+    border-radius: 10rem;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    /* width: 10rem; */
+    width: 100px;
+    aspect-ratio: 0.714;
+    border: 0.1rem solid black;
+    background-color: #fff;
+    border-radius: 1rem;
+    margin: 0.1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#deck {
+    /* position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 70px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: beige; */
+
+
+    display: block;
+    /* position: absolute; */
+    /* top: 200px; */
+    /* left: 20px; */
+    /* width: 50px;
+    height: 70px; */
+    /* width: 1; */
+    background-color: #fff;
+    /* border-radius: 5px; */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: beige;
+}
+
+.played-cards {
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+    /* TEMP */
+    background-color: azure;
+}
+
+.player {
+    position: absolute;
+    width: 30rem;
+    text-align: center;
+    /* TEMP */
+    background-color: antiquewhite;
+}
+
+.top-player {
+    top: 5rem;
+}
+
+.right-player {
+    right: 10rem;
+    /* transform: rotate(-90deg); */
+}
+
+.bottom-player {
+    bottom: 5rem;
+}
+
+.left-player {
+    left: 10rem;
+    /* transform: rotate(90deg); */
+}
+
+.player-info {
+    margin-bottom: 10px;
+}
+
+.player-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.player-picture {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    margin: 0.1rem;
+}
+
+.player-score {
+    color: #666;
+}
+
+.hand {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bottom-player .hand .card,
+#deck {
+    cursor: pointer;
+}
