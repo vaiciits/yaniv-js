@@ -356,6 +356,8 @@ class Yaniv {
                 player.addCard(this.deck.take());
             });
         };
+
+        this.putDown([this.deck.take()]);
     }
 
     getCardDivs() {
@@ -369,6 +371,22 @@ class Yaniv {
         return this.players[index];
     }
 
+    putDown(playedCards) {
+        this.played.push(playedCards);
+
+        const parent = document.querySelector('.played-cards');
+        parent.innerHTML = '';
+        for (let i = 0; i < playedCards.length; i++) {
+            const div = document.createElement('div');
+            div.classList.add('card');
+            div.dataset.suite = playedCards[i].getSuite();
+            div.dataset.number = playedCards[i].getNumeric();
+            div.innerHTML = playedCards[i].represent();
+
+            parent.appendChild(div);
+        }
+    }
+
     select(cardIndex) {
         this.getPlayer(0).select(cardIndex);
         this.visualiseSelect(cardIndex);
@@ -380,6 +398,7 @@ class Yaniv {
         if (playedCards.length > 0) {
             player.addCard(this.deck.take());
             this.unselect();
+            this.putDown(playedCards);
         }
     }
 

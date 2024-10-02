@@ -15,7 +15,7 @@ body {
 
 .table {
     position: relative;
-    width: 40rem;
+    width: 50rem;
     /* height: 300px; */
     aspect-ratio: 1.4;
     background-color: #008000;
@@ -29,7 +29,6 @@ body {
 }
 
 .card {
-    /* width: 10rem; */
     width: 100px;
     aspect-ratio: 0.714;
     border: 0.1rem solid black;
@@ -43,40 +42,17 @@ body {
 }
 
 #deck {
-    /* position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 50px;
-    height: 70px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    background-color: beige; */
-
-
-    display: block;
-    /* position: absolute; */
-    /* top: 200px; */
-    /* left: 20px; */
-    /* width: 50px;
-    height: 70px; */
-    /* width: 1; */
-    /* background-color: #fff; */
-    /* border-radius: 5px; */
+    display: flex;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     background-color: beige;
+    margin-bottom: 5rem;
 }
 
 .played-cards {
     display: flex;
-    justify-content: space-around;
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    padding: 0 20px;
-    /* TEMP */
-    background-color: azure;
+    align-items: center;
+    justify-content: center;
+    margin: 0.1rem;
 }
 
 .player {
@@ -131,7 +107,8 @@ body {
 }
 
 .bottom-player .hand .card,
-#deck {
+#deck,
+.played-cards .card {
     cursor: pointer;
 }
 
