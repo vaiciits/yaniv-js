@@ -2,7 +2,11 @@ const MAX_HAND_SIZE = 5;
 const MAX_PLAYER_COUNT = 4;
 const DISPLAY_NONE = 'none';
 const DISPLAY_FLEX = 'flex';
+const CARD = 'card';
 const CARD_SELECTED = 'selected';
+const CLICK = 'click';
+const PLAYER_INDEX = 0;
+const JOKER = 'Joker';
 
 class Deck {
     cards = [];
@@ -200,7 +204,7 @@ class JokerCard extends CardInterface {
     }
 
     getValue() {
-        return 'Joker';
+        return JOKER;
     }
 
     represent() {
@@ -270,11 +274,13 @@ class Player {
         }
     }
 
-    selectedInOrder() {
-        const values = this.selected.map(card => card.getNumeric());
+    selectedInOrder(selected) {
+        let values = selected.map(card => card.getNumeric());
+        let jokers = values.filter(value => value === 0).length;
+        values = values.filter(value => value !== 0);
         values.sort();
         return values.every((value, index, array) =>
-            index === 0 || value - 1 === array[index - 1]
+            index === 0 || value - 1 === array[index - 1] || (jokers && jokers--)
         );
     }
 
@@ -282,15 +288,18 @@ class Player {
         return (this.selected.length > 0) && (
             (this.selected.length === 1)
             || this.selectedSameValue()
-            || this.selectedStraight()
+            || this.selectedStraight(this.selected)
         );
     }
 
-    selectedSameSuite() {
+    selectedSameSuite(selected) {
         const suite = this.selected[0].getSuite();
         // Skip the very first as comparing against it.
+        let compare;
         for (let i = 1; i < this.selected.length; i++) {
-            if (this.selected[i].getSuite() !== suite) {
+            compare = this.selected[i].getSuite();
+            // Joker has null but is valid. Only joker is null.
+            if ((compare !== suite) && (compare !== null)) {
                 return false;
             }
         }
@@ -302,6 +311,7 @@ class Player {
         const value = this.selected[0].getNumeric();
         // Skip the very first as comparing against it.
         for (let i = 1; i < this.selected.length; i++) {
+            // TODO joker: valid, but not logical
             if (this.selected[i].getNumeric() !== value) {
                 return false;
             }
@@ -310,8 +320,8 @@ class Player {
         return true;
     }
 
-    selectedStraight() {
-        return this.selectedSameSuite() && this.selectedInOrder();
+    selectedStraight(selected) {
+        return this.selectedSameSuite(selected) && this.selectedInOrder(selected);
     }
 
     updateHand() {
@@ -376,12 +386,16 @@ class Yaniv {
 
         const parent = document.querySelector('.played-cards');
         parent.innerHTML = '';
+
         for (let i = 0; i < playedCards.length; i++) {
             const div = document.createElement('div');
-            div.classList.add('card');
+            div.classList.add(CARD);
             div.dataset.suite = playedCards[i].getSuite();
             div.dataset.number = playedCards[i].getNumeric();
             div.innerHTML = playedCards[i].represent();
+            div.onclick = function () {
+                fromPlayed(i);
+            };
 
             parent.appendChild(div);
         }
@@ -397,6 +411,17 @@ class Yaniv {
         const playedCards = player.playCards();
         if (playedCards.length > 0) {
             player.addCard(this.deck.take());
+            this.unselect();
+            this.putDown(playedCards);
+        }
+    }
+
+    takeFromPlayed(cardIndex, playerIndex = 0) {
+        console.log(cardIndex, playerIndex);
+        const player = this.getPlayer(playerIndex);
+        const playedCards = player.playCards();
+        if (playedCards.length > 0) {
+            player.addCard(this.played[this.played.length - 1][cardIndex]);
             this.unselect();
             this.putDown(playedCards);
         }
@@ -430,6 +455,10 @@ const players = [
 const deck = (new Deck()).init();
 deck.shuffle();
 const game = new Yaniv(deck, players);
+
+function fromPlayed(cardIndex, playerIndex) {
+    game.takeFromPlayed(cardIndex, playerIndex);
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     // game.deck.shuffle();
